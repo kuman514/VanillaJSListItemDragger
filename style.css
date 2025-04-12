@@ -21,11 +21,27 @@ main {
 #draggable-list {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  overflow-y: scroll;
+  row-gap: 8px;
 
   width: 100%;
   max-width: 400px;
   height: 50%;
   max-height: 400px;
+
+  padding: 8px;
+  border: solid 1px black;
+  border-radius: 4px;
+}
+
+#draggable-list > li {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  width: 100%;
+  height: 48px;
 
   padding: 8px;
   border: solid 1px black;
