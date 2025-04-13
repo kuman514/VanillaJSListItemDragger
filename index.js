@@ -60,9 +60,14 @@
     itemForm.addEventListener('submit', (event) => {
       event.preventDefault();
 
+      const trimmedTextValue = itemFormText.value.trim();
+      if (trimmedTextValue.length === 0) {
+        return;
+      }
+
       const newItem = {
         id: String(newItemId),
-        value: itemFormText.value,
+        value: trimmedTextValue,
       };
       items.push(newItem);
       generateListItem(newItem);
