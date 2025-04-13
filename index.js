@@ -9,40 +9,69 @@
 
     function generateListItem(newItem) {
       const newListItemContent = document.createElement('span');
+      newListItemContent.className = 'content';
       newListItemContent.textContent = newItem.value;
+
+      const newListItemUpperLayer = document.createElement('span');
+      newListItemUpperLayer.id = `${newItem.id}-upper`;
+      newListItemUpperLayer.className = 'upper-layer';
+      newListItemUpperLayer.addEventListener('dragenter', () => {
+        newListItemUpperLayer.classList.add('highlighted');
+      });
+      newListItemUpperLayer.addEventListener('dragleave', () => {
+        newListItemUpperLayer.classList.remove('highlighted');
+      });
+
+      const newListItemUnderLayer = document.createElement('span');
+      newListItemUnderLayer.id = `${newItem.id}-under`;
+      newListItemUnderLayer.className = 'under-layer';
+      newListItemUnderLayer.addEventListener('dragenter', () => {
+        newListItemUnderLayer.classList.add('highlighted');
+      });
+      newListItemUnderLayer.addEventListener('dragleave', () => {
+        newListItemUnderLayer.classList.remove('highlighted');
+      });
+
       const newListItem = document.createElement('li');
       newListItem.appendChild(newListItemContent);
+      newListItem.appendChild(newListItemUpperLayer);
+      newListItem.appendChild(newListItemUnderLayer);
       newListItem.draggable = true;
       newListItem.id = newItem.id;
+
       draggableList.appendChild(newListItem);
     }
 
     draggableList.addEventListener('dragstart', (event) => {
       draggedItem = event.target;
     });
+
     draggableList.addEventListener('dragover', (event) => {
       event.preventDefault();
     });
+
     draggableList.addEventListener('drop', (event) => {
       event.preventDefault();
+
+      const [targetId, direction] = event.target.id.split('-');
 
       const draggedItemIndex = items.findIndex(
         (item) => draggedItem.id === item.id
       );
       const primaryTargetIndex = items.findIndex(
-        (item) => event.target.id === item.id
+        (item) => targetId === item.id
       );
 
-      if (
-        draggedItemIndex === -1 ||
-        primaryTargetIndex === -1 ||
-        primaryTargetIndex === draggedItemIndex
-      ) {
+      if (draggedItemIndex === -1 || primaryTargetIndex === -1) {
         return;
       }
 
-      items.splice(primaryTargetIndex, 0, items[draggedItemIndex]);
-      if (primaryTargetIndex > draggedItemIndex) {
+      const finalTargetIndex =
+        direction === 'under' ? primaryTargetIndex + 1 : primaryTargetIndex;
+
+      items.splice(finalTargetIndex, 0, items[draggedItemIndex]);
+
+      if (finalTargetIndex > draggedItemIndex) {
         items.splice(draggedItemIndex, 1);
       } else {
         items.splice(draggedItemIndex + 1, 1);
